@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-OPTION (TESTINCLUDE "Including utest " ON)
+OPTION (TESTINCLUDE "Including utest " OFF)
 
 project(les3Allocator)
 
