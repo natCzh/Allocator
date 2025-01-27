@@ -25,13 +25,13 @@ struct Node
 template<typename T, typename Alloc = std::allocator<T> >
 class MyList
 {
-	using Node = Node<T>;
-	using NodeAlloc = typename Alloc::template rebind<Node>::other;
+	using Node_ = Node<T>;
+	using NodeAlloc = typename Alloc::template rebind<Node_>::other;
 
 public:
-	struct Iterator : public std::iterator<std::forward_iterator_tag, Node>
+	struct Iterator : public std::iterator<std::forward_iterator_tag, Node_>
 	{
-		Iterator(Node *node_) noexcept : node(node_) {}
+		Iterator(Node_ *node_) noexcept : node(node_) {}
 
 		T operator*() const noexcept
 		{
@@ -59,20 +59,20 @@ public:
 			return x.node != y.node;
 		}
 
-		Node *node;
+		Node_ *node;
 	};
 	 
 	MyList()
 	{
-		before = new Node(T(), head);
+		before = new Node_(T(), head);
 	}
 
 	~MyList()
 	{
-		Node* nodeCur = head;
+		Node_* nodeCur = head;
 		while (nodeCur)
 		{
-			Node* next = nodeCur->next;
+			Node_* next = nodeCur->next;
 			alloc.destroy(nodeCur);
 			alloc.deallocate(nodeCur, 1);
 			nodeCur = next;
@@ -97,14 +97,14 @@ public:
 
 	void push_front(const T& val)
 	{
-		Node* nodeCur = alloc.allocate(1);
+		Node_* nodeCur = alloc.allocate(1);
 		alloc.construct(nodeCur, val, head);
 		head = nodeCur;
 	}
 
 	Iterator insert_after(Iterator pos, const T& val)
 	{
-		Node* nodeCur = alloc.allocate(1);
+		Node_* nodeCur = alloc.allocate(1);
 		alloc.construct(nodeCur, val, pos.node->next);
 		pos.node->next = nodeCur;
 
@@ -114,8 +114,8 @@ public:
 	}
 
 private:
-	Node*										before = nullptr;
-	Node*										head = nullptr;
+	Node_*										before = nullptr;
+	Node_*										head = nullptr;
 	NodeAlloc									alloc;
 };
 

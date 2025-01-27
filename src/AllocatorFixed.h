@@ -153,7 +153,7 @@ struct AllocatorFixed
 	const T* data() const
     {
 		std::cout << "data" << std::endl;
-        return ptr_;
+        return ptr;
     }
 
 	std::size_t size() const
