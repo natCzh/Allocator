@@ -43,6 +43,12 @@ public:
 			return node->ptr();
 		}
 
+		Iterator& operator++() noexcept
+		{
+			node = node->next;
+			return *this;
+		}
+
 		friend bool operator==(const Iterator& x, const Iterator& y) noexcept
 		{
 			return x.node == y.node;
@@ -66,7 +72,7 @@ public:
 		Node* nodeCur = head;
 		while (nodeCur)
 		{
-			Node* next = node->next;
+			Node* next = nodeCur->next;
 			alloc.destroy(nodeCur);
 			alloc.deallocate(nodeCur, 1);
 			nodeCur = next;
@@ -84,7 +90,7 @@ public:
 		return Iterator(nullptr);
 	}
 
-	Iterator before_begin() noexcept
+	Iterator begin_() noexcept
 	{
 		return Iterator(before);
 	}
