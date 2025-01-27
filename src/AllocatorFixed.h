@@ -29,18 +29,10 @@ struct AllocatorFixed
 	/// @param[out] указатель на выделенную область
 	T* allocate(std::size_t n)
 	{
-		std::cout << "allocate" << std::endl;
-		std::cout << "n = " << n << ",";
 		if (n <= 0)
 			return nullptr;
 		else if (offsetThis + n > Size)
-		{
-			std::cout << "offsetThis + n = " << offsetThis + n << ",";
-			std::cout << "Size = " << Size << std::endl;
 			throw std::bad_alloc();
-		}
-
-		std::cout << "offsetThis = " << offsetThis << std::endl;
 
 		T *p = nullptr;
 		if (offsetThis == 0) // Выделение новой памяти
@@ -51,12 +43,10 @@ struct AllocatorFixed
 			
 			for (; offsetThis < n; offsetThis++)
 			{
-				std::cout << "offsetThis in round = " << offsetThis << std::endl;
 				ptrAlloc[offsetThis] = ptr + offsetThis;
 			}
 			offsetThis--;
 			p = ptr;
-			std::cout << "offsetThis = " << offsetThis << std::endl;
 		}
 		else // добавление элемента в уже выделенную память
 		{
@@ -85,21 +75,11 @@ struct AllocatorFixed
 
 			p = ptr + index;
 
-			std::cout << "allocate2" << std::endl;
-			std::cout << "index " << index << std::endl;
-
 			for (decltype(n) i = 0; i < n; ++i)
 			{
 				ptrAlloc[index + i] = ptr + index + i;
 				++offsetThis;
 			}
-
-			std::cout << "ptr" << ptr << std::endl;
-			std::cout << "p" << p << std::endl;
-			std::cout << "offsetThis" << offsetThis << std::endl;
-			
-
-			std::cout << "allocate3" << std::endl;
 		}
 		return p;
 	}
@@ -109,10 +89,6 @@ struct AllocatorFixed
 	/// @param[in] n кол-во элементов
 	void deallocate(T *p, std::size_t n)
 	{
-		std::cout << "deallocate" << std::endl;
-		std::cout << "p " << p << std::endl;
-		std::cout << "n " << n << std::endl;
-
 		auto it = std::find(ptrAlloc.begin(), ptrAlloc.end(), p);
 		assert(it != ptrAlloc.end());
 
@@ -125,8 +101,6 @@ struct AllocatorFixed
 		}
 		if (offsetThis == 0)
 		{
-			std::cout << "deallocate 1" << std::endl;
-			std::cout << "ptr " << ptr << std::endl;
 			std::free(ptr);
 			ptr = nullptr;
 		}
@@ -135,30 +109,21 @@ struct AllocatorFixed
 	template<typename U, typename ...Args>
 	void construct(U* p, Args &&...args)
 	{
-		std::cout << "construct" << std::endl;
 		new(p) U(std::forward<Args>(args)...);
-		std::cout << "construct1" << std::endl;
 	}
 
 	void destroy(T* p)
 	{
-		std::cout << "destroy" << std::endl;
 		p->~T();
 	}
 
-
-
-
-
 	const T* data() const
     {
-		std::cout << "data" << std::endl;
         return ptr;
     }
 
 	std::size_t size() const
 	{
-		std::cout << "size" << std::endl;
 		return offsetThis;
 	}
 
